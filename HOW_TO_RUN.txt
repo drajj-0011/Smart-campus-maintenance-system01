@@ -1,0 +1,30 @@
+SMART CAMPUS - How to run in VS Code
+====================================
+
+This project uses:
+  Frontend : React.js
+  Backend  : Node.js + Express.js
+  Database : MongoDB
+  APIs     : REST (GET, POST, PUT, DELETE) with full CRUD
+
+1. Install Node.js and MongoDB on your PC.
+
+2. Open the "smart-campus" folder in VS Code.
+
+3. Terminal 1 - Backend:
+     cd backend
+     npm install
+     npm run seed
+     npm run dev
+   Backend runs at http://localhost:5000
+
+4. Terminal 2 - Frontend:
+     cd frontend
+     npm install
+     npm run dev
+   Open http://localhost:3000
+
+Demo logins:
+  student@campus.edu  / student123
+  staff@campus.edu    / staff123
+  admin@campus.edu    / admin123
