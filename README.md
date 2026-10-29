@@ -279,15 +279,3 @@ Add screenshots in a `screenshots/` folder:
 
 ---
 
-## 10. Viva Questions (Quick Notes)
-
-- **What is REST API?** – A way for frontend and backend to talk using HTTP methods (GET, POST, PUT, DELETE) and JSON data.
-- **What is Express middleware?** – A function that runs between the request and the response, e.g. `protect` checks the token before the controller runs.
-- **Why MongoDB?** – Stores data as JSON-like documents, flexible schema, works well with Node.js.
-- **What is Mongoose?** – An ODM library to define schemas and talk to MongoDB easily.
-- **What is JWT?** – A signed token given after login; the frontend sends it in every request to prove who the user is.
-- **Why bcrypt?** – Passwords are stored as hashes, so even if the database leaks, real passwords are safe.
-- **What is `populate()`?** – Replaces an ObjectId reference with the full document (e.g. user name instead of user id).
-- **useState / useEffect?** – `useState` stores data in a component; `useEffect` runs code like API calls when the page loads or a value changes.
-- **What is Context API?** – Used to share the logged in user across all components without passing props.
-- **What is CORS?** – Allows the frontend (port 3000) to call the backend (port 5000).
