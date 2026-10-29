@@ -253,29 +253,3 @@ All errors are returned as `{ "message": "..." }`
 
 ---
 
-## 8. Team Roles & Contributions
-
-| Member | Role | Contribution |
-|---|---|---|
-| Member 1 – ________ | React Frontend Development | Designed all pages (Login, Register, Dashboard, Complaint Form, Details, Manage Users), components, routing and CSS styling |
-| Member 2 – ________ | Node.js + Express Backend & APIs | Created Express server, routes, controllers, REST APIs for complaints and users, error handling middleware |
-| Member 3 – ________ | MongoDB & Database | Designed database schemas (User, Complaint), relationships, Mongoose models, seed data, filters & stats queries |
-| Member 4 – ________ | Authentication, Integration & Testing | JWT login, password hashing, role-based access, connected frontend to backend using Axios, tested APIs using Postman |
-
----
-
-## 9. Screenshots
-
-Add screenshots in a `screenshots/` folder:
-1. Login page
-2. Register page
-3. Student dashboard
-4. Raise complaint form
-5. Complaint details with progress bar & comments
-6. Admin – assign staff & change status
-7. Staff – update status
-8. Admin – manage users
-9. MongoDB Compass showing `users` and `complaints` collections
-
----
-
