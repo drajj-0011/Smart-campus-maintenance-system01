@@ -63,39 +63,62 @@ sequenceDiagram
     actor Admin
     actor Staff
 
-    Student->>React: Log in
+    Student->>React: Register / Log in
     React->>Express: POST /api/auth/login
-    Express->>MongoDB: Find user and compare password hash
-    MongoDB-->>Express: User record
+    Express->>MongoDB: Find user by email
+    MongoDB-->>Express: User record with bcrypt password hash
+    Express->>Express: Compare hash, reject past employees
     Express-->>React: JWT token and user details
+    React->>React: Store token and user in localStorage (AuthContext)
 
     Student->>React: Fill complaint form
-    Note over Student,React: Category, title, description,<br/>Block A/B/C/D and room number
-    React->>Express: POST /api/complaints with JWT
-    Express->>Express: Verify token, student role and form data
-    Express->>MongoDB: Save complaint
-    MongoDB-->>Express: Saved complaint
+    Note over Student,React: Category, title, description,<br/>Block A/B/C/D dropdown + separate room number
+    React->>React: Frontend validation (title 3+, description 10+)
+    React->>Express: POST /api/complaints with Bearer JWT
+    Express->>Express: protect verifies token, allowRoles("student")
+    Express->>Express: Validate category and block enums
+    Express->>MongoDB: Save complaint (pre-save hook builds location)
+    MongoDB-->>Express: Saved document
     Express-->>React: 201 Created — status Pending
 
-    Admin->>React: Select a present staff member
-    React->>Express: PUT /api/complaints/:id
-    Express->>MongoDB: Check staff is present; save assignment
+    Admin->>Express: GET /api/users?role=staff&employmentStatus=present
+    Express->>MongoDB: Find present staff only
+    MongoDB-->>Express: Staff with employeeId and jobRole
+    Admin->>React: Select a staff member, e.g. Electrician EMP001
+    React->>Express: PUT /api/complaints/:id with assignedTo
+    Express->>MongoDB: Verify staff exists and is not a past employee
+    Express->>MongoDB: Save assignment, change Pending to In Progress
     Express-->>React: Updated complaint — In Progress
 
-    Staff->>React: Complete assigned work
-    React->>Express: PUT /api/complaints/:id
+    Staff->>React: Start the work, then finish it
+    React->>Express: PUT /api/complaints/:id with status
+    Express->>Express: Confirm complaint is assigned to this staff
     Express->>MongoDB: Save status Resolved
     Express-->>React: Updated complaint
 
-    Student->>React: View dashboard or complaint details
-    React->>Express: GET /api/complaints
-    Express->>MongoDB: Find student's complaints
-    Express-->>React: Complaints with latest statuses
+    Student->>React: Read or add comments
+    React->>Express: POST /api/complaints/:id/comments
+    Express->>MongoDB: Push comment into embedded comments array
+    Express-->>React: Complaint with full comment thread
+
+    Student->>React: Open dashboard
+    React->>Express: GET /api/complaints and GET /api/complaints/stats
+    Express->>MongoDB: Find complaints where createdBy is this student
+    MongoDB-->>Express: Documents with populated staff details
+    Express-->>React: Complaint list, statuses and status counts
+
+    Note over Admin,MongoDB: If a staff member leaves the job,<br/>admin marks them as Past Employee
+    Admin->>Express: PUT /api/users/:id with employmentStatus past
+    Express->>MongoDB: Unassign their open jobs back to Pending
+    Express->>MongoDB: Keep Resolved complaints under their employeeId
+    Express-->>React: Employee record and work history stay in MongoDB
 ```
 
-**Example:** A student reports a broken fan in **Block A, Room 204**. The admin assigns an **Electrician** with Employee ID **EMP001**. That employee repairs it and marks the complaint **Resolved**. The student sees the updated status.
+**Status path:** `Pending → In Progress → Resolved` (admin may also set `Rejected`)
 
----
+**Example:** A student reports a broken fan in **Block A, Room 204**. The backend stores `block = "Block A"`, `roomNumber = "204"` and auto-builds `location = "Block A - Room 204"`. The admin opens the complaint, and the assign dropdown lists only present staff — he selects **Ravi Kumar — Electrician (EMP001)**. The status changes automatically from **Pending** to **In Progress**. Ravi logs in, sees only his assigned jobs, clicks **Working On It** and later **Mark Resolved**. The student sees the updated status on his dashboard and detail page.
+
+If Ravi later leaves the college, the admin clicks **Mark as Past** in Manage Staff. Ravi can no longer log in, his unfinished jobs return to **Pending**, but his Employee ID **EMP001** and all resolved complaints remain in MongoDB and can be viewed any time from his **Work done** history.
 
 ## 4. Complaint Status Flow
 
