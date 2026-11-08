@@ -293,31 +293,4 @@ MongoDB has **two collections**: `users` and `complaints`. Comments are stored *
 
 ---
 
-## 9. Running the Project
 
-**Terminal 1 — backend**
-```bash
-cd backend
-npm install
-npm run seed
-npm run dev
-```
-Backend runs at `http://localhost:5000`.
-
-**Terminal 2 — frontend**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Frontend runs at `http://localhost:3000`. MongoDB must be running locally, or set a MongoDB Atlas URI in `backend/.env`.
-
-**Demo logins after seeding**
-
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@campus.edu | admin123 |
-| Staff | staff@campus.edu | staff123 |
-| Student | student@campus.edu | student123 |
-
-Seed data includes present staff `EMP001`–`EMP005` and past employees `EMP010`–`EMP012` with their completed complaints already in MongoDB.
